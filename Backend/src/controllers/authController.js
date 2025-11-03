@@ -1,17 +1,18 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt"; // ✅ Import bcrypt
+import bcrypt from "bcrypt";
 
- export const login = async (req, res) => {
+// ✅ LOGIN CONTROLLER
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // ✅ Check if fields are provided
+    // ✅ Validate input
     if (!email || !password) {
       return res.status(400).json({ success: false, error: "All fields are required" });
     }
 
-    // ✅ Check if user exists
+    // ✅ Find user
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
@@ -52,8 +53,7 @@ import bcrypt from "bcrypt"; // ✅ Import bcrypt
   }
 };
 
-
- export const verify = (req,res)=>{
-    return res.status(200).json({success:ture,user:req.user})
-}
-
+// ✅ VERIFY CONTROLLER
+export const verify = (req, res) => {
+  return res.status(200).json({ success: true, user: req.user });
+};
