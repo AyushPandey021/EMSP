@@ -21,7 +21,7 @@ const AdminSidebar = () => {
         <p className="text-sm text-gray-400 mt-1">Admin Panel</p>
       </div>
 
-      {/* ----- Navigation Links ----- */}
+ 
       <nav className="flex-1 mt-6 px-4 space-y-2">
         {/* Dashboard */}
         <NavLink
@@ -57,7 +57,7 @@ const AdminSidebar = () => {
 
         {/* Departments */}
         <NavLink
-          to="/admin-departments"
+          to="/admin-dashboard/departments"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
               isActive
@@ -72,7 +72,7 @@ const AdminSidebar = () => {
 
         {/* Tasks */}
         <NavLink
-          to="/admin-tasks"
+          to="/admin-dashboard/tasks"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
               isActive
@@ -87,7 +87,7 @@ const AdminSidebar = () => {
 
         {/* Leaves */}
         <NavLink
-          to="/admin-leaves"
+          to="/admin-dashboard/leaves"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
               isActive

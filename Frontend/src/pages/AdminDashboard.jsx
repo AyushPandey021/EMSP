@@ -1,9 +1,9 @@
 import React from "react";
 import { useAuth } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AdminSidebar from "../Components/DashBoard.jsx/Sidebar.jsx/as/AdminSidebar";
 import Navbar from "../Components/DashBoard.jsx/Sidebar.jsx/as/Navbar";
-import AdminSummery from "../Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery";
+// import AdminSummery from "../Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery";
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
       <div className="flex-1 ml-64 flex flex-col">
         <Navbar />
         <main className="flex-1 p-6">
-          <AdminSummery />
+     <Outlet/>
         </main>
       </div>
     </div>

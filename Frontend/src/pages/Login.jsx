@@ -7,8 +7,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { login    } = useAuth()
-  const navigate = useNavigate()
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,15 +17,15 @@ const Login = () => {
         "http://localhost:5000/api/auth/login",
         { email, password }
       );
-      
-      if(response.data.success){
-        login(response.data.user)
-        localStorage.setItem("token", response.data.token)
-        if(response.data.user.role === "admin "){
-            navigate("/admin-dashboard")
-        }
-        else{
-            navigate("/emloyee-dashboard")
+      console.log("✅✅", response);
+
+      if (response.data.success) {
+        login(response.data.user);
+        localStorage.setItem("token", response.data.token);
+        if (response.data.user.role === "admin ") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/employee-dashboard");
         }
       }
 

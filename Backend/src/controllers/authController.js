@@ -1,37 +1,76 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-// ✅ LOGIN CONTROLLER
+// ============================
+// 🔹 AUTO ADMIN CREATION
+// ============================
+const userRegister = async () => {
+  try {
+    // check if admin already exists
+    const existingAdmin = await User.findOne({ email: "admin@gmail.com" });
+    if (existingAdmin) {
+      console.log("⚙️ Admin user already exists.");
+      return;
+    }
+
+    const hashPassword = await bcrypt.hash("admin", 10);
+
+    const newUser = new User({
+      name: "admin",
+      email: "admin@gmail.com",
+      password: hashPassword,
+      role: "admin",
+    });
+
+    await newUser.save();
+    console.log("✅ Admin user created successfully!");
+  } catch (error) {
+    console.log("❌ Error while creating admin:", error.message);
+  }
+};
+
+// ✅ call the function once on startup
+userRegister();
+
+// ============================
+// 🔹 LOGIN CONTROLLER
+// ============================
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // ✅ Validate input
+    // validate input
     if (!email || !password) {
-      return res.status(400).json({ success: false, error: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, error: "All fields are required" });
     }
 
-    // ✅ Find user
+    // find user
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ success: false, error: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Ayush not found" });
     }
 
-    // ✅ Compare password
+    // compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, error: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, error: "Invalid credentials" });
     }
 
-    // ✅ Generate JWT token
+    // generate JWT token
     const token = jwt.sign(
       { _id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "10d" }
     );
 
-    // ✅ Send response
+    // success response
     return res.status(200).json({
       success: true,
       message: "Login successful",
@@ -43,7 +82,6 @@ export const login = async (req, res) => {
         email: user.email,
       },
     });
-
   } catch (error) {
     console.error("Login Error:", error.message);
     return res.status(500).json({
@@ -53,7 +91,9 @@ export const login = async (req, res) => {
   }
 };
 
-// ✅ VERIFY CONTROLLER
+// ============================
+// 🔹 VERIFY CONTROLLER
+// ============================
 export const verify = (req, res) => {
   return res.status(200).json({ success: true, user: req.user });
 };
