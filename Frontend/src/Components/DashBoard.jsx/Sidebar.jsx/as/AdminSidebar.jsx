@@ -57,7 +57,7 @@ const AdminSidebar = () => {
 
         {/* Departments */}
         <NavLink
-          to="/admin-dashboard/departments"
+          to="/admin-dashboard/department"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
               isActive

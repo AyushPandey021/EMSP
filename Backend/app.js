@@ -1,14 +1,17 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from "dotenv"
-import connectDB from './src/routes/Db.js'
+import connectDB from './src/Db.js'
+
 import authRouter from "./src/routes/auth.rout.js"
+import departmentRouter from  "./src/routes/department.js"
  const app = express()
  dotenv.config()
 connectDB()
  app.use(cors())
  app.use(express.json())
  app.use("/api/auth", authRouter)
+ app.use("/api/department", departmentRouter)
 
 
 app.get("/", (req, res) => {

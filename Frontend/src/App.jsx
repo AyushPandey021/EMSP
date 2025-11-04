@@ -9,6 +9,7 @@ import DepartmentList from './Components/DashBoard.jsx/Sidebar.jsx/as/Department
 import AdminSummery from './Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery';
 import LeaveList from './Components/DashBoard.jsx/Leaves/LeaveList';
 import TaskList from './Components/Task/TaskList';
+import AddDepartment from './Components/DashBoard.jsx/Sidebar.jsx/as/Departments/AddDepartment';
 
 const App = () => {
   return (
@@ -32,7 +33,8 @@ const App = () => {
       >
         <Route index element={<AdminSummery/>} ></Route>
         {/* Nested routes under AdminDashboard */}
-        <Route path="departments" element={<DepartmentList />} />
+        <Route path="/admin-dashboard/department" element={<DepartmentList />} />
+        <Route path="/admin-dashboard/add-new-departments" element={<AddDepartment />} />
         <Route path="leaves" element={<LeaveList />} />
         <Route path="tasks" element={<TaskList />} />
       </Route>
