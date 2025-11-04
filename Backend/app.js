@@ -11,7 +11,7 @@ connectDB()
  app.use(cors())
  app.use(express.json())
  app.use("/api/auth", authRouter)
- app.use("/api/department", departmentRouter)
+ app.use("/api/departments", departmentRouter);
 
 
 app.get("/", (req, res) => {

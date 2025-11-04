@@ -1,22 +1,28 @@
-import axios from "axios";
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // ✅ Better user feedback than alert()
 
 const AddDepartment = () => {
   const [department, setDepartment] = useState({
     dep_name: "",
     description: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDepartment({ ...department, [name]: value });
+    setDepartment((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
       const response = await axios.post(
         `http://localhost:5000/api/departments/add`,
@@ -27,13 +33,27 @@ const AddDepartment = () => {
           },
         }
       );
+
       if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Department Added!",
+          text: "The new department has been successfully created.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate("/admin-dashboard/departments");
       }
     } catch (error) {
-      if (error.response && !error.response.data.success) {
-        alert(error.response.data.error);
-      }
+      const message =
+        error.response?.data?.error || "Something went wrong. Try again!";
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: message,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,6 +65,7 @@ const AddDepartment = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Department Name */}
           <div>
             <label
               htmlFor="dep_name"
@@ -64,6 +85,7 @@ const AddDepartment = () => {
             />
           </div>
 
+          {/* Description */}
           <div>
             <label
               htmlFor="description"
@@ -82,11 +104,17 @@ const AddDepartment = () => {
             ></textarea>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 text-lg font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-transform transform hover:scale-[1.02] shadow-lg"
+            disabled={loading}
+            className={`w-full py-3 text-lg font-semibold rounded-lg text-white transition-transform transform hover:scale-[1.02] shadow-lg ${
+              loading
+                ? "bg-indigo-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
           >
-            Add Department
+            {loading ? "Adding..." : "Add Department"}
           </button>
         </form>
       </div>

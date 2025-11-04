@@ -1,26 +1,32 @@
-import React from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import EmployeeDashboard from './pages/EmployeeDashboard';
-import PrivateRoute from './utils/PrivateRoute';
-import RoleBasedRoute from './utils/RoleBasedRoute';
-import DepartmentList from './Components/DashBoard.jsx/Sidebar.jsx/as/Departments/DepartmentList';
-import AdminSummery from './Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery';
-import LeaveList from './Components/DashBoard.jsx/Leaves/LeaveList';
-import TaskList from './Components/Task/TaskList';
-import AddDepartment from './Components/DashBoard.jsx/Sidebar.jsx/as/Departments/AddDepartment';
+import React from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+
+// Pages
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
+
+// Route Guards
+import PrivateRoute from "./utils/PrivateRoute";
+import RoleBasedRoute from "./utils/RoleBasedRoute";
+
+// Admin Components
+import AdminSummery from "./Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery";
+import DepartmentList from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/DepartmentList";
+import AddDepartment from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/AddDepartment";
+import LeaveList from "./Components/DashBoard.jsx/Leaves/LeaveList";
+import TaskList from "./Components/Task/TaskList";
 
 const App = () => {
   return (
     <Routes>
-      {/* Redirect to Admin Dashboard by default */}
-      <Route path="/" element={<Navigate to="/admin-dashboard"/>} />
+      {/* Default Redirect */}
+      <Route path="/" element={<Navigate to="/admin-dashboard" />} />
 
-      {/* Public Route */}
+      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
 
-      {/* Admin Routes */}
+      {/* ------------------ ADMIN ROUTES ------------------ */}
       <Route
         path="/admin-dashboard"
         element={
@@ -31,15 +37,19 @@ const App = () => {
           </PrivateRoute>
         }
       >
-        <Route index element={<AdminSummery/>} ></Route>
-        {/* Nested routes under AdminDashboard */}
-        <Route path="/admin-dashboard/department" element={<DepartmentList />} />
-        <Route path="/admin-dashboard/add-new-departments" element={<AddDepartment />} />
+        {/* Default route inside AdminDashboard */}
+        <Route index element={<AdminSummery />} />
+
+        {/* Department Management */}
+        <Route path="department" element={<DepartmentList />} />
+        <Route path="add-new-departments" element={<AddDepartment />} />
+
+        {/* Leaves and Tasks */}
         <Route path="leaves" element={<LeaveList />} />
         <Route path="tasks" element={<TaskList />} />
       </Route>
 
-      {/* Employee Routes */}
+      {/* ------------------ EMPLOYEE ROUTES ------------------ */}
       <Route
         path="/employee-dashboard"
         element={

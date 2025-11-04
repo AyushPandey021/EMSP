@@ -1,13 +1,11 @@
 import express from 'express'
-import  authMiddleware from "../middleware/authMiddleware.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+import { addDepartment, getDepartments } from '../controllers/departmentController.js';
 
+const router = express.Router();
 
-import { addDepartment, getDepartments } from '../controllers/departmentController.js'
+// 👉 Remove extra /department here
+router.get("/", authMiddleware, getDepartments);
+router.post("/add", authMiddleware, addDepartment);
 
-const router = express.Router()
-router.get("/departments",authMiddleware,getDepartments)
-router.post("/add",authMiddleware,addDepartment)
-
-
-
-export default router
+export default router;

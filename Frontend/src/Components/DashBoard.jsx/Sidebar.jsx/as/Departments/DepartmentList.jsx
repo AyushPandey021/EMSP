@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import DataTable from "react-data-table-component";
-import { columns, DepartmentButtons } from "../../../../../utils/DepartmentHelper";
+
 
 const DepartmentList = () => {
   const [departments, setDepartments] = useState([]);
@@ -14,7 +14,7 @@ const DepartmentList = () => {
     const fetchDepartments = async () => {
       setDepLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/api/department", {
+        const response = await axios.get("http://localhost:5000/api/departments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -31,12 +31,15 @@ const DepartmentList = () => {
 
           setDepartments(data);
 
+          // ✅ Toast notification
           Swal.fire({
+            toast: true,
+            position: "top-end",
             icon: "success",
-            title: "Departments Loaded!",
-            text: "Department list fetched successfully.",
-            timer: 2000,
+            title: "Departments loaded successfully",
             showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
           });
         }
       } catch (error) {
@@ -45,7 +48,7 @@ const DepartmentList = () => {
           title: "Error!",
           text:
             error.response?.data?.error ||
-            "Failed to fetch departments. Try again later.",
+            "Failed to fetch departments. Please try again later.",
         });
       } finally {
         setDepLoading(false);
@@ -55,7 +58,7 @@ const DepartmentList = () => {
     fetchDepartments();
   }, []);
 
-  // ✅ Filter departments by name
+  // ✅ Search Filter
   const filteredDepartments = departments.filter((dep) =>
     dep.dep_name.toLowerCase().includes(search.toLowerCase())
   );
@@ -69,14 +72,13 @@ const DepartmentList = () => {
       ) : (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-8">
           <div className="max-w-5xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl p-8">
-            
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8">
               <h3 className="text-3xl font-semibold tracking-wide mb-4 md:mb-0">
                 Manage Departments
               </h3>
               <Link
-                to="/admin-dashboard/add-new-department"
+                to="/admin-dashboard/add-new-departments"
                 className="bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg shadow-md font-medium transition-transform transform hover:scale-[1.03]"
               >
                 + Add New Department
@@ -94,42 +96,49 @@ const DepartmentList = () => {
               />
             </div>
 
-            {/* Data Table */}
-            <div className="rounded-lg overflow-hidden shadow-xl">
-              <DataTable
-                columns={columns}
-                data={filteredDepartments}
-                pagination
-                highlightOnHover
-                responsive
-                customStyles={{
-                  headCells: {
-                    style: {
-                      backgroundColor: "#1f2937",
-                      color: "#e5e7eb",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                    },
-                  },
-                  rows: {
-                    style: {
-                      backgroundColor: "#111827",
-                      color: "#d1d5db",
-                      minHeight: "60px",
-                      "&:hover": {
+            {/* Data Table or Empty State */}
+            {filteredDepartments.length === 0 ? (
+              <p className="text-center text-gray-400 py-6">
+                No departments found.
+              </p>
+            ) : (
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <DataTable
+                  columns={columns}
+                  data={filteredDepartments}
+                  pagination
+                  highlightOnHover
+                  responsive
+                  persistTableHead
+                  customStyles={{
+                    headCells: {
+                      style: {
                         backgroundColor: "#1f2937",
+                        color: "#e5e7eb",
+                        fontSize: "14px",
+                        fontWeight: "600",
                       },
                     },
-                  },
-                  pagination: {
-                    style: {
-                      backgroundColor: "#1f2937",
-                      color: "#d1d5db",
+                    rows: {
+                      style: {
+                        backgroundColor: "#111827",
+                        color: "#d1d5db",
+                        minHeight: "60px",
+                        "&:hover": {
+                          backgroundColor: "#1f2937",
+                        },
+                      },
                     },
-                  },
-                }}
-              />
-            </div>
+                    pagination: {
+                      style: {
+                        backgroundColor: "#1f2937",
+                        color: "#d1d5db",
+                      },
+                    },
+                  }}
+                />
+              </div>
+            )}
           </div>
         </div>
       )}
