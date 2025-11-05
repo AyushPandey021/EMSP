@@ -5,7 +5,7 @@ const getDepartments = async (req, res) => {
     const departments = await Department.find().sort({ createdAt: -1 });
     return res.status(200).json({
       success: true,
-      departments, // 👈 match the frontend naming
+      departments,
     });
   } catch (error) {
     console.error("Error fetching departments:", error.message);

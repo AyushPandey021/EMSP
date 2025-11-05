@@ -41,7 +41,7 @@ const App = () => {
         <Route index element={<AdminSummery />} />
 
         {/* Department Management */}
-        <Route path="department" element={<DepartmentList />} />
+        <Route path="departments" element={<DepartmentList />} />
         <Route path="add-new-departments" element={<AddDepartment />} />
 
         {/* Leaves and Tasks */}
