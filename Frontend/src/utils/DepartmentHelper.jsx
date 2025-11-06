@@ -1,14 +1,32 @@
 // 📁 DepartmentColumns.js
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 // 🎨 Beautiful and responsive action buttons
-export const DepartmentButtons = () => {
+export const DepartmentButtons = ({ _id }) => {
+  const navigate = useNavigate(); // ✅ must be inside the component
+
+  const handleEdit = () => {
+    navigate(`/admin-dashboard/departments/${_id}`);
+  };
+
+  const handleDelete = () => {
+    console.log("Delete department:", _id);
+    // You can add SweetAlert2 confirmation or API delete call here
+  };
+
   return (
     <div className="flex items-center gap-2">
-      <button className="px-3 py-1 text-sm bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-all duration-200">
+      <button
+        onClick={handleEdit}
+        className="px-3 py-1 text-sm bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-all duration-200"
+      >
         Edit
       </button>
-      <button className="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200">
+      <button
+        onClick={handleDelete}
+        className="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200"
+      >
         Delete
       </button>
     </div>
@@ -36,7 +54,7 @@ export const columns = [
   },
   {
     name: "Action",
-    cell: (row) => <DepartmentButtons row={row} />,
+    cell: (row) => <DepartmentButtons _id={row._id} />, // ✅ correct prop name
     center: true,
   },
 ];

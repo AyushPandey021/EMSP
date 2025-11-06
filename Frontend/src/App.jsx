@@ -16,6 +16,7 @@ import DepartmentList from "./Components/DashBoard.jsx/Sidebar.jsx/as/Department
 import AddDepartment from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/AddDepartment";
 import LeaveList from "./Components/DashBoard.jsx/Leaves/LeaveList";
 import TaskList from "./Components/Task/TaskList";
+import EditDepartment from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/EditDepartment";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
         {/* Department Management */}
         <Route path="departments" element={<DepartmentList />} />
         <Route path="add-new-departments" element={<AddDepartment />} />
+        <Route path="/admin-dashboard/departments/:id" element={<EditDepartment />} />
 
         {/* Leaves and Tasks */}
         <Route path="leaves" element={<LeaveList />} />

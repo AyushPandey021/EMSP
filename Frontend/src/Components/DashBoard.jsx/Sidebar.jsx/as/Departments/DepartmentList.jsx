@@ -30,7 +30,7 @@ const DepartmentList = () => {
           sno: index + 1,
           dep_name: dep.dep_name,
           description: dep.description || "—",
-          action: <DepartmentButtons id={dep._id} />,
+          action: <DepartmentButtons _id={dep ._id}/>,
         }));
 
         setDepartments(data);
