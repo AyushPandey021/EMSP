@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const AddEmp = () => {
 
   const [departments, setDepartments] = useState([]);
-
+const [formData,setFormData] = useState({})
   useEffect(() => {
     const getDepartments = async () => {
       const data = await fetchDepartments(); // ✅ await the async function
@@ -13,6 +15,53 @@ const AddEmp = () => {
 
     getDepartments();
   }, []);
+
+  const hanglechange = (e)=>{
+    const {name ,value , files } = e.target
+    if(name ==="image"){
+      setFormData((prevData)=>({...prevData,[name]:files[0]}))
+
+    }else{
+      setFormData((prevData)=>({...prevData,[name]:value}))
+    }
+  }
+  const handleSubmit= async(e)=>{
+e.preventDefault()
+const formDataObj  = new FormData()
+Object.keys(formData).forEach((key)=>{
+  formDataObj.append(key,formData[key])
+})
+  try {
+      const response = await axios.post(
+        `http://localhost:5000/api/employee/add`,
+        formDataObj,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Department Added!",
+          text: "The new department has been successfully created.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/admin-dashboard/employees");
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.error || "Something went wrong. Try again!";
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: message,
+      });
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center p-6">
       <div className="w-full max-w-3xl bg-white shadow-md rounded-xl p-8">
@@ -20,7 +69,7 @@ const AddEmp = () => {
           Add New Employee
         </h2>
 
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -28,7 +77,7 @@ const AddEmp = () => {
             </label>
             <input
               type="text"
-              placeholder="Enter full name"
+              onChange={hanglechange}
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -40,6 +89,7 @@ const AddEmp = () => {
             </label>
             <input
               type="email"
+               onChange={hanglechange}
               placeholder="Enter email"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
@@ -63,6 +113,7 @@ const AddEmp = () => {
             </label>
             <input
               type="text"
+               onChange={hanglechange}
               placeholder="EMP123"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
@@ -73,7 +124,7 @@ const AddEmp = () => {
             <label className="block text-sm font-medium text-gray-700">
               Material Status
             </label>
-            <select className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none">
+            <select className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"  onChange={hanglechange}>
               <option value="">Select status</option>
               <option value="single">Single</option>
               <option value="married">Married</option>
@@ -85,7 +136,8 @@ const AddEmp = () => {
             <label className="block text-sm font-medium text-gray-700">
               Gender
             </label>
-            <select className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none">
+            <select className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+             onChange={hanglechange}>
               <option value="">Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -96,14 +148,17 @@ const AddEmp = () => {
           {/* Designation */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Designation
+              Role
             </label>
             <input
               type="text"
-              placeholder="Enter designation"
+               onChange={hanglechange}
+              placeholder="Enter Role"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
+          {/* Designation */}
+    
 
           {/* Department */}
   <div>
@@ -111,6 +166,8 @@ const AddEmp = () => {
         Department
       </label>
       <select
+      name="department"
+      onChange={hanglechange}
         className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
       >
         <option value="">Select department</option>
@@ -121,6 +178,17 @@ const AddEmp = () => {
         ))}
       </select>
     </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Designation
+            </label>
+            <input
+              type="text"
+               onChange={hanglechange}
+              placeholder="Enter designation"
+              className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+          </div>
           {/* Salary */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -128,6 +196,7 @@ const AddEmp = () => {
             </label>
             <input
               type="number"
+               onChange={hanglechange}
               placeholder="Enter salary"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
@@ -140,18 +209,20 @@ const AddEmp = () => {
             </label>
             <input
               type="password"
+               onChange={hanglechange}
               placeholder="Enter password"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
           {/* Upload Image */}
-          <div className="md:col-span-2">
+          <div className="">
             <label className="block text-sm font-medium text-gray-700">
               Upload Employee Image
             </label>
             <input
               type="file"
+               onChange={hanglechange}
               accept="image/*"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
