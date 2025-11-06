@@ -100,4 +100,16 @@ const editDepartment = async (req, res) => {
   }
 };
 
-export { addDepartment, getDepartments, editDepartment ,getDepartmentById};
+ const deleteDepartment = async  (req,res)=>{
+  const {id} = req.params 
+try{
+
+const deleteDep = await Department.findByIdAndDelete({_id:id})
+return res.status(200).json({success:true,deleteDep})
+}
+catch(error){
+  return res.status(500).json({success:false,error:"delete department server error ", })
+}
+
+}
+export { addDepartment, getDepartments, editDepartment ,getDepartmentById,deleteDepartment};

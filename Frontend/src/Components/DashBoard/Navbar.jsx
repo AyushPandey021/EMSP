@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../../../../context/authContext";
+import { useAuth } from "../../context/authContext";
 import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 

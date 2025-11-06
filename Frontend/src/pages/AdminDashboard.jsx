@@ -1,8 +1,8 @@
 import React from "react";
 import { useAuth } from "../context/authContext";
 import { Outlet, useNavigate } from "react-router-dom";
-import AdminSidebar from "../Components/DashBoard.jsx/Sidebar.jsx/as/AdminSidebar";
-import Navbar from "../Components/DashBoard.jsx/Sidebar.jsx/as/Navbar";
+import AdminSidebar from "../Components/DashBoard/AdminSidebar";
+import Navbar from "../Components/DashBoard/Navbar";
 // import AdminSummery from "../Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery";
 
 const AdminDashboard = () => {

@@ -11,12 +11,14 @@ import PrivateRoute from "./utils/PrivateRoute";
 import RoleBasedRoute from "./utils/RoleBasedRoute";
 
 // Admin Components
-import AdminSummery from "./Components/DashBoard.jsx/Sidebar.jsx/as/AdminSummery";
-import DepartmentList from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/DepartmentList";
-import AddDepartment from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/AddDepartment";
-import LeaveList from "./Components/DashBoard.jsx/Leaves/LeaveList";
+import AdminSummery from "./Components/DashBoard/AdminSummery";
+import DepartmentList from "./Components/Departments/DepartmentList";
+import AddDepartment from "./Components/Departments/AddDepartment";
+import LeaveList from "./Components/Leaves/LeaveList";
 import TaskList from "./Components/Task/TaskList";
-import EditDepartment from "./Components/DashBoard.jsx/Sidebar.jsx/as/Departments/EditDepartment";
+import EditDepartment from "./Components/Departments/EditDepartment"
+import EmployeeList from "./Components/Employee/EmployeeList";
+import AddEmp from "./Components/Employee/AddEmp";
 
 const App = () => {
   return (
@@ -45,6 +47,8 @@ const App = () => {
         <Route path="departments" element={<DepartmentList />} />
         <Route path="add-new-departments" element={<AddDepartment />} />
         <Route path="/admin-dashboard/departments/:id" element={<EditDepartment />} />
+        <Route path="/admin-dashboard/employees" element={<EmployeeList />} />
+             <Route path="/admin-dashboard/add-employee" element={< AddEmp />} />
 
         {/* Leaves and Tasks */}
         <Route path="leaves" element={<LeaveList />} />

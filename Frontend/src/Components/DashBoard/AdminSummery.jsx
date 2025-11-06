@@ -3,7 +3,7 @@ import SummeryCard from "./SummeryCard";
 import { FaUsers, FaBuilding, FaMoneyBillWave } from "react-icons/fa";
 import { ClipboardCheck, CalendarDays, Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import WeatherHeader from "../../WeatherHeader";
+import WeatherHeader from "./WeatherHeader";
 
 const AdminSummery = () => {
   const navigate = useNavigate();
