@@ -4,7 +4,10 @@ import { FaSearch, FaUserAlt, FaEnvelope, FaPhone, FaBuilding } from "react-icon
 import { MdOutlineWork } from "react-icons/md";
 import { useState } from "react";
 import { useEffect } from "react";
-import { EmployeeButton } from "../../utils/EmployeeHelper";
+import { columns, EmployeeButtons } from "../../utils/EmployeeHelper";
+import DataTable from "react-data-table-component";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const EmployeeList = () => {
   const navigate = useNavigate();
@@ -15,11 +18,9 @@ const EmployeeList = () => {
       const fetchEmployee = async () => {
         setEmployeeLoading(true);
         try {
-          const response = await axios.get("http://localhost:5000/api/employee", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
+          const response =await axios.post("http://localhost:5000/api/employee", {
+  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+});
     
           console.log("Department API response:", response.data);
     
@@ -31,12 +32,13 @@ const EmployeeList = () => {
             sno: index + 1,
             dep_name: emp.department.dep_name,
             name: emp.userId.name,
-            dob: emp.dob,
-            ProfileImage: emp.userId.ProfileImage,
+            dob: new Date(emp.dob).toDateString(),
+            ProfileImage: <img src={`http://localhost:5000/${emp.userId.ProfileImage}`} alt="" />
+           ,
             salary: emp.salary,
             designation: emp.designation,
             role: emp.role,
-          action :(<EmployeeButton Id={emp._id} />)
+          action :(<EmployeeButtons Id={emp._id} />)
           }));
     
           setEmployee(data);
@@ -45,7 +47,7 @@ const EmployeeList = () => {
             toast: true,
             position: "top-end",
             icon: "success",
-            title: "Departments loaded successfully",
+            title: "Employees loaded successfully",
             showConfirmButton: false,
             timer: 1200,
             timerProgressBar: true,
@@ -57,7 +59,7 @@ const EmployeeList = () => {
             title: "Error!",
             text:
               error.response?.data?.error ||
-              "Failed to fetch departments. Please try again later.",
+              "Failed to fetch Employees. Please try again later.",
           });
         } finally {
           setEmployeeLoading(false);
@@ -97,6 +99,8 @@ const EmployeeList = () => {
       </div>
 
 
+
+<DataTable columns={columns} data={employee}/>
      
     </div>
   );

@@ -91,9 +91,7 @@ export const addEmployee = async (req, res) => {
 };
 
 
-import Employee from "../models/employeeModel.js"; // apne model ka exact path likh
 
-// ✅ Get all employees OR specific one by ID
 export const getEmployee = async (req, res) => {
   try {
     const employees = await Employee.find()
