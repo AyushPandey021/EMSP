@@ -20,21 +20,22 @@ const employeeSchema = new mongoose.Schema(
       required: true,
     },
 
-    gender: {
-      type: String,
-      enum: ["Male", "Female", "Other"],
-      required: true,
-    },
+gender: {
+  type: String,
+  enum: ["male", "female", "other"],
+  required: true,
+},
 
-    maritalStatus: {
-      type: String,
-      enum: ["Single", "Married", "Divorced", "Widowed"],
-      default: "Single",
-    },
+maritalStatus: {
+  type: String,
+  enum: ["single", "married"],
+  default: "single",
+},
+
 
     role: {
       type: String,
-      required: true,
+   
       trim: true,
     },
     designation: {

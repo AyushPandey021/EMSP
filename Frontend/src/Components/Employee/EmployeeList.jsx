@@ -1,11 +1,72 @@
-import React from "react";
+import React, { Profiler } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaUserAlt, FaEnvelope, FaPhone, FaBuilding } from "react-icons/fa";
 import { MdOutlineWork } from "react-icons/md";
+import { useState } from "react";
+import { useEffect } from "react";
+import { EmployeeButton } from "../../utils/EmployeeHelper";
 
 const EmployeeList = () => {
   const navigate = useNavigate();
+    const [employee, setEmployee] = useState([]);
+    const [employeLoading, setEmployeeLoading] = useState(false);
+    const [search, setSearch] = useState("");
 
+      const fetchEmployee = async () => {
+        setEmployeeLoading(true);
+        try {
+          const response = await axios.get("http://localhost:5000/api/employee", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+    
+          console.log("Department API response:", response.data);
+    
+          const employees = response.data.departments || response.data.data || [];
+    
+          // ✅ Pass delete function to buttons
+          const data = employees.map((emp, index) => ({
+            _id: emp._id,
+            sno: index + 1,
+            dep_name: emp.department.dep_name,
+            name: emp.userId.name,
+            dob: emp.dob,
+            ProfileImage: emp.userId.ProfileImage,
+            salary: emp.salary,
+            designation: emp.designation,
+            role: emp.role,
+          action :(<EmployeeButton Id={emp._id} />)
+          }));
+    
+          setEmployee(data);
+    
+          Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "success",
+            title: "Departments loaded successfully",
+            showConfirmButton: false,
+            timer: 1200,
+            timerProgressBar: true,
+          });
+        } catch (error) {
+          console.error("Fetch error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error!",
+            text:
+              error.response?.data?.error ||
+              "Failed to fetch departments. Please try again later.",
+          });
+        } finally {
+          setEmployeeLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        fetchEmployee();
+      }, []);
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header Section */}
@@ -35,57 +96,8 @@ const EmployeeList = () => {
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className="overflow-x-auto bg-white rounded-xl shadow-md">
-        <table className="min-w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-left text-gray-700">
-              <th className="p-4 border-b">#</th>
-              <th className="p-4 border-b">
-                <FaUserAlt className="inline mr-2" /> Name
-              </th>
-              <th className="p-4 border-b">
-                <FaEnvelope className="inline mr-2" /> Email
-              </th>
-              <th className="p-4 border-b">
-                <FaPhone className="inline mr-2" /> Phone
-              </th>
-              <th className="p-4 border-b">
-                <FaBuilding className="inline mr-2" /> Department
-              </th>
-              <th className="p-4 border-b">
-                <MdOutlineWork className="inline mr-2" /> Role
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="hover:bg-gray-50 transition border-b">
-              <td className="p-4">1</td>
-              <td className="p-4 font-medium text-gray-800">Ayush Pandey</td>
-              <td className="p-4 text-gray-600">ayush@example.com</td>
-              <td className="p-4 text-gray-600">+91 9876543210</td>
-              <td className="p-4 text-gray-600">IT</td>
-              <td className="p-4 text-gray-600">Frontend Developer</td>
-            </tr>
-            <tr className="hover:bg-gray-50 transition border-b">
-              <td className="p-4">2</td>
-              <td className="p-4 font-medium text-gray-800">Riya Sharma</td>
-              <td className="p-4 text-gray-600">riya@example.com</td>
-              <td className="p-4 text-gray-600">+91 9123456780</td>
-              <td className="p-4 text-gray-600">HR</td>
-              <td className="p-4 text-gray-600">HR Manager</td>
-            </tr>
-            <tr className="hover:bg-gray-50 transition border-b">
-              <td className="p-4">3</td>
-              <td className="p-4 font-medium text-gray-800">Rohit Verma</td>
-              <td className="p-4 text-gray-600">rohit@example.com</td>
-              <td className="p-4 text-gray-600">+91 9000000000</td>
-              <td className="p-4 text-gray-600">Finance</td>
-              <td className="p-4 text-gray-600">Accountant</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+     
     </div>
   );
 };

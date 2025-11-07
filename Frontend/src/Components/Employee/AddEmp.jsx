@@ -2,38 +2,41 @@ import React, { useEffect, useState } from "react";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const AddEmp = () => {
-
+  const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
-const [formData,setFormData] = useState({})
+  const [formData, setFormData] = useState({});
+
   useEffect(() => {
     const getDepartments = async () => {
-      const data = await fetchDepartments(); // ✅ await the async function
-      setDepartments(data || []); // ensure array
+      const data = await fetchDepartments();
+      setDepartments(data || []);
     };
-
     getDepartments();
   }, []);
 
-  const hanglechange = (e)=>{
-    const {name ,value , files } = e.target
-    if(name ==="image"){
-      setFormData((prevData)=>({...prevData,[name]:files[0]}))
-
-    }else{
-      setFormData((prevData)=>({...prevData,[name]:value}))
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  }
-  const handleSubmit= async(e)=>{
-e.preventDefault()
-const formDataObj  = new FormData()
-Object.keys(formData).forEach((key)=>{
-  formDataObj.append(key,formData[key])
-})
-  try {
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formDataObj = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataObj.append(key, formData[key]);
+    });
+
+    try {
       const response = await axios.post(
-        `http://localhost:5000/api/employee/add`,
+        "http://localhost:5000/api/employee/add",
         formDataObj,
         {
           headers: {
@@ -45,8 +48,8 @@ Object.keys(formData).forEach((key)=>{
       if (response.data.success) {
         Swal.fire({
           icon: "success",
-          title: "Department Added!",
-          text: "The new department has been successfully created.",
+          title: "Employee Added!",
+          text: "The new employee has been successfully created.",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -54,14 +57,15 @@ Object.keys(formData).forEach((key)=>{
       }
     } catch (error) {
       const message =
-        error.response?.data?.error || "Something went wrong. Try again!";
+        error.response?.data?.error || error.response?.data?.message || "Something went wrong. Try again!";
       Swal.fire({
         icon: "error",
         title: "Error",
         text: message,
       });
     }
-  }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center p-6">
       <div className="w-full max-w-3xl bg-white shadow-md rounded-xl p-8">
@@ -69,134 +73,136 @@ Object.keys(formData).forEach((key)=>{
           Add New Employee
         </h2>
 
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
-          {/* Name */}
+        <form
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
+          {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
-              onChange={hanglechange}
+              name="name"
+              onChange={handleChange}
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
-               onChange={hanglechange}
+              name="email"
+              onChange={handleChange}
               placeholder="Enter email"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
-          {/* DOB */}
+          {/* Date of Birth */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Date of Birth
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
             <input
               type="date"
+              name="dob"
+              onChange={handleChange}
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
           {/* Employee ID */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Employee ID
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Employee ID</label>
             <input
               type="text"
-               onChange={hanglechange}
+              name="employeeId"
+              onChange={handleChange}
               placeholder="EMP123"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
-          {/* Material */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Material Status
-            </label>
-            <select className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"  onChange={hanglechange}>
-              <option value="">Select status</option>
-              <option value="single">Single</option>
-              <option value="married">Married</option>
-            </select>
-          </div>
+  {/* Marital Status */}
+<div>
+  <label className="block text-sm font-medium text-gray-700">Marital Status</label>
+  <select
+    name="maritalStatus"
+    onChange={handleChange}
+    className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+  >
+    <option value="">Select status</option>
+    <option value="single">Single</option>
+    <option value="married">Married</option>
+  </select>
+</div>
 
-          {/* Gender */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Gender
-            </label>
-            <select className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-             onChange={hanglechange}>
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+{/* Gender */}
+<div>
+  <label className="block text-sm font-medium text-gray-700">Gender</label>
+  <select
+    name="gender"
+    onChange={handleChange}
+    className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+  >
+    <option value="">Select gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select>
+</div>
 
-          {/* Designation */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Role
-            </label>
-            <input
-              type="text"
-               onChange={hanglechange}
-              placeholder="Enter Role"
-              className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-            />
-          </div>
-          {/* Designation */}
-    
+{/* Role */}
+<div>
+  <label className="block text-sm font-medium text-gray-700">Role</label>
+  <input
+    type="text"
+    name="role"
+    required
+    onChange={handleChange}
+    placeholder="Enter Role"
+    className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+  />
+</div>
+
 
           {/* Department */}
-  <div>
-      <label className="block text-sm font-medium text-gray-700">
-        Department
-      </label>
-      <select
-      name="department"
-      onChange={hanglechange}
-        className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-      >
-        <option value="">Select department</option>
-        {departments.map((dep) => (
-          <option key={dep._id} value={dep._id}>
-            {dep.dep_name}
-          </option>
-        ))}
-      </select>
-    </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Designation
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Department</label>
+            <select
+              name="department"
+              onChange={handleChange}
+              className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+            >
+              <option value="">Select department</option>
+              {departments.map((dep) => (
+                <option key={dep._id} value={dep._id}>
+                  {dep.dep_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Designation */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Designation</label>
             <input
               type="text"
-               onChange={hanglechange}
+              name="designation"
+              onChange={handleChange}
               placeholder="Enter designation"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
+
           {/* Salary */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Salary
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Salary</label>
             <input
               type="number"
-               onChange={hanglechange}
+              name="salary"
+              onChange={handleChange}
               placeholder="Enter salary"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
@@ -204,25 +210,23 @@ Object.keys(formData).forEach((key)=>{
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
-               onChange={hanglechange}
+              name="password"
+              onChange={handleChange}
               placeholder="Enter password"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
           {/* Upload Image */}
-          <div className="">
-            <label className="block text-sm font-medium text-gray-700">
-              Upload Employee Image
-            </label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Upload Employee Image</label>
             <input
               type="file"
-               onChange={hanglechange}
+              name="image"
+              onChange={handleChange}
               accept="image/*"
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />

@@ -112,4 +112,8 @@ catch(error){
 }
 
 }
+
+
+
+
 export { addDepartment, getDepartments, editDepartment ,getDepartmentById,deleteDepartment};

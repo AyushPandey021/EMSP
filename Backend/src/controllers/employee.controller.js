@@ -1,26 +1,11 @@
 import Employee from "../models/employee.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import multer from "multer";
-import path from "path";
 
-// ✅ Multer setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
-
-// ✅ Controller
-const addEmployee = async (req, res) => {
+// ✅ Add Employee Controller
+export const addEmployee = async (req, res) => {
   try {
     const {
-      userId,
       employeeId,
       dob,
       gender,
@@ -31,7 +16,7 @@ const addEmployee = async (req, res) => {
       name,
       email,
       password,
-      role
+      role,
     } = req.body;
 
     // Validation
@@ -70,7 +55,7 @@ const addEmployee = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: "employee", // ✅ Default role
+      role: "employee",
       profileImage: req.file ? req.file.filename : "",
     });
 
@@ -105,4 +90,22 @@ const addEmployee = async (req, res) => {
   }
 };
 
-export { addEmployee, upload };
+
+import Employee from "../models/employeeModel.js"; // apne model ka exact path likh
+
+// ✅ Get all employees OR specific one by ID
+export const getEmployee = async (req, res) => {
+  try {
+    const employees = await Employee.find()
+        .populate('userId',{password: 0 }).populate("department") 
+       return res.status(200).json({ success: true,employees});
+ 
+  } catch (error) {
+    console.error("Error fetching employee:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
