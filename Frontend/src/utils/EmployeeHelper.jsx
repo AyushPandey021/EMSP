@@ -56,7 +56,7 @@ export const columns = [
     cell: (row) =>
       row.image ? (
         <img
-          src={`http://localhost:5000/uploads/${row.image}`}
+          src={`http://localhost:5000/${row.image}`}
           alt={row.name}
           className="w-10 h-10 rounded-full object-cover"
         />
@@ -73,19 +73,18 @@ export const columns = [
   },
   {
     name: "Department",
-    selector: (row) => row.department?.dep_name || "N/A",
+    selector: (row) => row.department || "N/A",
     sortable: true,
     grow: 2,
   },
-    {
+  {
     name: "DOB",
     selector: (row) => row.dob || "N/A",
     sortable: true,
- 
   },
   {
     name: "Action",
-   selector: (row)=>row.action,
+    selector: (row) => row.action,
     width: "300px",
   },
 ];
