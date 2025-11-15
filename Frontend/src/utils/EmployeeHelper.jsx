@@ -4,31 +4,38 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 /* ---------------- EMPLOYEE BUTTONS ---------------- */
+/* ---------------- EMPLOYEE BUTTONS ---------------- */
 export const EmployeeButtons = ({ id }) => {
   const navigate = useNavigate();
 
+  const btn =
+    "px-3 py-1.5 rounded-lg text-sm font-medium transition-all shadow-sm";
+
   return (
-    <div className="flex space-x-2">
+    <div className="flex items-center gap-2">
       <button
-        className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
-        onClick={() => navigate(`/admin/employees/view/${id}`)}
+        className={`${btn} bg-blue-50 text-blue-600 hover:bg-blue-100 hover:shadow`}
+        onClick={() => navigate(`/admin-dashboard/employees/${id}`)}
       >
         View
       </button>
+
       <button
-        className="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
-        onClick={() => navigate(`/admin/employees/edit/${id}`)}
+        className={`${btn} bg-green-50 text-green-600 hover:bg-green-100 hover:shadow`}
+        onClick={() => navigate(`/admin-dashboard/employees/edit/${id}`)}
       >
         Edit
       </button>
+
       <button
-        className="px-3 py-1 bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition"
+        className={`${btn} bg-amber-50 text-amber-600 hover:bg-amber-100 hover:shadow`}
         onClick={() => navigate(`/admin/employees/salary/${id}`)}
       >
         Salary
       </button>
+
       <button
-        className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+        className={`${btn} bg-red-50 text-red-600 hover:bg-red-100 hover:shadow`}
         onClick={() => navigate(`/admin/employees/leave/${id}`)}
       >
         Leave
@@ -36,6 +43,7 @@ export const EmployeeButtons = ({ id }) => {
     </div>
   );
 };
+
 
 /* ---------------- EMPLOYEE COLUMNS ---------------- */
 export const columns = [
@@ -49,8 +57,8 @@ export const columns = [
     name: "Name",
     selector: (row) => row.name || "N/A",
     sortable: true,
-    grow: 2,
   },
+
   {
     name: "Image",
     cell: (row) =>
@@ -58,37 +66,36 @@ export const columns = [
         <img
           src={`http://localhost:5000/${row.ProfileImage}`}
           alt={row.name}
-          className="w-10 h-10 rounded-full object-cover"
-          loading="lazy"
+          className="w-12 h-12 rounded-xl shadow object-cover border border-gray-200"
         />
       ) : (
         <span className="text-gray-400 italic">No Image</span>
       ),
-    grow: 1.5,
   },
+
   {
     name: "Employee ID",
-    selector: (row) => row.employeeId || "N/A",
-    sortable: true,
-    grow: 2,
+    selector: (row) => row.employeeId?.emp?._id || "N/A",
   },
+
   {
     name: "Department",
-    selector: (row) => row.department?.dep_name || "N/A", // Ensure you're accessing the department name properly
-    sortable: true,
-    grow: 2,
+    selector: (row) => row.dep_name || "N/A",
   },
+
   {
     name: "DOB",
     selector: (row) => row.dob || "N/A",
     sortable: true,
   },
+
   {
     name: "Action",
-    selector: (row) => row.action,
     width: "300px",
+    cell: (row) => <EmployeeButtons id={row._id} />,
   },
 ];
+
 
 /* ---------------- FETCH DEPARTMENTS ---------------- */
 export const fetchDepartments = async () => {

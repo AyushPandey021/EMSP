@@ -31,10 +31,10 @@ const EmployeeList = () => {
       const formattedData = employeesData.map((emp, index) => ({
         _id: emp._id,
         sno: index + 1,
-        dep_name: emp.department?.dep_name || "N/A",
+        dep_name: emp.department.dep_name ,
         name: emp.userId.name || "N/A",
-        dob: emp.dob ? new Date(emp.dob).toDateString() : "N/A",
-        ProfileImage: emp.userId?.ProfileImage ? (
+        dob: new Date(emp.dob).toLocaleDateString(),
+        ProfileImage: emp.userId.ProfileImage ? (
           <img
             src={`http://localhost:5000/${emp.userId.ProfileImage}`}
             alt=""

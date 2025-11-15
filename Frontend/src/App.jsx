@@ -19,6 +19,8 @@ import TaskList from "./Components/Task/TaskList";
 import EditDepartment from "./Components/Departments/EditDepartment"
 import EmployeeList from "./Components/Employee/EmployeeList";
 import AddEmp from "./Components/Employee/AddEmp";
+import { ViewEmp } from "./Components/Employee/View/ViewEmp";
+import EditEmp from "./Components/Employee/Edit/EditEmp";
 
 const App = () => {
   return (
@@ -49,6 +51,16 @@ const App = () => {
         <Route path="/admin-dashboard/departments/:id" element={<EditDepartment />} />
         <Route path="/admin-dashboard/employees" element={<EmployeeList />} />
              <Route path="/admin-dashboard/add-employee" element={< AddEmp />} />
+             <Route path="/admin-dashboard/add-employee" element={< AddEmp />} />
+        <Route
+  path="/admin-dashboard/employees/:id"
+  element={<ViewEmp />}
+/>
+        <Route
+  path="/admin-dashboard/employees/edit/:id"
+  element={<EditEmp
+   />}
+/>
 
         {/* Leaves and Tasks */}
         <Route path="leaves" element={<LeaveList />} />

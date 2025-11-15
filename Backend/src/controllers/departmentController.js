@@ -1,4 +1,6 @@
+import { json } from "express";
 import Department from "../models/department.model.js";
+import Employee from "../models/employee.model.js";
 
 // 🟢 Get all departments
 const getDepartments = async (req, res) => {
@@ -112,7 +114,6 @@ catch(error){
 }
 
 }
-
 
 
 
