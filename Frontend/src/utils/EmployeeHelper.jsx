@@ -54,11 +54,12 @@ export const columns = [
   {
     name: "Image",
     cell: (row) =>
-      row.image ? (
+      row.ProfileImage ? (
         <img
-          src={`http://localhost:5000/${row.image}`}
+          src={`http://localhost:5000/${row.ProfileImage}`}
           alt={row.name}
           className="w-10 h-10 rounded-full object-cover"
+          loading="lazy"
         />
       ) : (
         <span className="text-gray-400 italic">No Image</span>
@@ -73,7 +74,7 @@ export const columns = [
   },
   {
     name: "Department",
-    selector: (row) => row.department || "N/A",
+    selector: (row) => row.department?.dep_name || "N/A", // Ensure you're accessing the department name properly
     sortable: true,
     grow: 2,
   },

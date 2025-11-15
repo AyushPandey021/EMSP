@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { columns, EmployeeButtons } from "../../utils/EmployeeHelper";
@@ -24,7 +24,7 @@ const EmployeeList = () => {
 
       console.log("Employee API response:", response.data);
 
-      // ✅ Adjust according to your backend response
+      // ✅ Check backend response structure
       const employeesData = response.data.data || response.data || [];
 
       // ✅ Format Data for DataTable
@@ -32,7 +32,7 @@ const EmployeeList = () => {
         _id: emp._id,
         sno: index + 1,
         dep_name: emp.department?.dep_name || "N/A",
-        name: emp.userId?.name || "N/A",
+        name: emp.userId.name || "N/A",
         dob: emp.dob ? new Date(emp.dob).toDateString() : "N/A",
         ProfileImage: emp.userId?.ProfileImage ? (
           <img
@@ -80,13 +80,12 @@ const EmployeeList = () => {
     fetchEmployee();
   }, []);
 
-  // ✅ Search Filter
-  useEffect(() => {
-    const result = employees.filter((emp) =>
+  // ✅ Search Filter with useMemo for performance optimization
+  const filteredEmployeesMemo = useMemo(() => {
+    return employees.filter((emp) =>
       emp.name.toLowerCase().includes(search.toLowerCase())
     );
-    setFilteredEmployees(result);
-  }, [search, employees]);
+  }, [employees, search]);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -119,9 +118,12 @@ const EmployeeList = () => {
 
       {/* Data Table */}
       <div className="bg-white p-4 rounded-lg shadow">
+        {loading && <div>Loading...</div>}
+        {filteredEmployeesMemo.length === 0 && !loading && <div>No employees found.</div>}
+        
         <DataTable
           columns={columns}
-          data={filteredEmployees}
+          data={filteredEmployeesMemo}
           progressPending={loading}
           pagination
           highlightOnHover

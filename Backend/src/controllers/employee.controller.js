@@ -90,20 +90,22 @@ export const addEmployee = async (req, res) => {
   }
 };
 
-
-
 export const getEmployee = async (req, res) => {
   try {
     const employees = await Employee.find()
-        .populate('userId',{password: 0 }).populate("department") 
-       return res.status(200).json({ success: true,employees});
- 
+      .populate("userId", "name email ProfileImage")   // GOOD
+      .populate("department", "dep_name");
+
+    res.status(200).json({
+      success: true,
+      data: employees,
+    });
+
   } catch (error) {
-    console.error("Error fetching employee:", error);
+    console.log("Get Employee Error:", error);
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      error: error.message,
+      message: error.message || "Server Error",
     });
   }
 };

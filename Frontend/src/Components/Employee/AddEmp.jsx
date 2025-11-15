@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 
 const AddEmp = () => {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getDepartments = async () => {
@@ -29,15 +30,28 @@ const AddEmp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.department || !formData.role || !formData.salary || !formData.dob) {
+      Swal.fire({
+        icon: "error",
+        title: "Missing Fields",
+        text: "Please fill in all required fields.",
+      });
+      return;
+    }
+
     const formDataObj = new FormData();
     Object.keys(formData).forEach((key) => {
-      formDataObj.append(key, formData[key]);
+      if (formData[key]) {
+        formDataObj.append(key, formData[key]);
+      }
     });
+
+    setLoading(true);
 
     try {
       const response = await axios.post(
         "http://localhost:5000/api/employee/add",
-        
         formDataObj,
         {
           headers: {
@@ -57,13 +71,18 @@ const AddEmp = () => {
         navigate("/admin-dashboard/employees");
       }
     } catch (error) {
+      setLoading(false);
       const message =
-        error.response?.data?.error || error.response?.data?.message || "Something went wrong. Try again!";
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Something went wrong. Try again!";
       Swal.fire({
         icon: "error",
         title: "Error",
         text: message,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,6 +105,7 @@ const AddEmp = () => {
               type="text"
               name="name"
               onChange={handleChange}
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -97,7 +117,7 @@ const AddEmp = () => {
               type="email"
               name="email"
               onChange={handleChange}
-              placeholder="Enter email"
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -109,6 +129,7 @@ const AddEmp = () => {
               type="date"
               name="dob"
               onChange={handleChange}
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -120,53 +141,53 @@ const AddEmp = () => {
               type="text"
               name="employeeId"
               onChange={handleChange}
-              placeholder="EMP123"
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
-  {/* Marital Status */}
-<div>
-  <label className="block text-sm font-medium text-gray-700">Marital Status</label>
-  <select
-    name="maritalStatus"
-    onChange={handleChange}
-    className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-  >
-    <option value="">Select status</option>
-    <option value="single">Single</option>
-    <option value="married">Married</option>
-  </select>
-</div>
+          {/* Marital Status */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Marital Status</label>
+            <select
+              name="maritalStatus"
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+            >
+              <option value="">Select status</option>
+              <option value="single">Single</option>
+              <option value="married">Married</option>
+            </select>
+          </div>
 
-{/* Gender */}
-<div>
-  <label className="block text-sm font-medium text-gray-700">Gender</label>
-  <select
-    name="gender"
-    onChange={handleChange}
-    className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-  >
-    <option value="">Select gender</option>
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-    <option value="other">Other</option>
-  </select>
-</div>
+          {/* Gender */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Gender</label>
+            <select
+              name="gender"
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
-{/* Role */}
-<div>
-  <label className="block text-sm font-medium text-gray-700">Role</label>
-  <input
-    type="text"
-    name="role"
-    required
-    onChange={handleChange}
-    placeholder="Enter Role"
-    className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-  />
-</div>
-
+          {/* Role */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Role</label>
+            <input
+              type="text"
+              name="role"
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+          </div>
 
           {/* Department */}
           <div>
@@ -174,6 +195,7 @@ const AddEmp = () => {
             <select
               name="department"
               onChange={handleChange}
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             >
               <option value="">Select department</option>
@@ -192,7 +214,7 @@ const AddEmp = () => {
               type="text"
               name="designation"
               onChange={handleChange}
-              placeholder="Enter designation"
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -204,7 +226,7 @@ const AddEmp = () => {
               type="number"
               name="salary"
               onChange={handleChange}
-              placeholder="Enter salary"
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -216,7 +238,7 @@ const AddEmp = () => {
               type="password"
               name="password"
               onChange={handleChange}
-              placeholder="Enter password"
+              required
               className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
@@ -238,8 +260,9 @@ const AddEmp = () => {
             <button
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              disabled={loading}
             >
-              Add Employee
+              {loading ? "Adding Employee..." : "Add Employee"}
             </button>
           </div>
         </form>
