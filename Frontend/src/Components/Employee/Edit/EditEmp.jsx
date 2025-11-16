@@ -137,7 +137,7 @@ const EditEmp = () => {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          {/* Full Name */}
+          
           <div>
             <label className="text-sm font-medium text-gray-700">Full Name</label>
             <input
@@ -150,7 +150,7 @@ const EditEmp = () => {
             />
           </div>
 
-          {/* Email */}
+
           <div>
             <label className="text-sm font-medium text-gray-700">Email</label>
             <input
@@ -163,7 +163,6 @@ const EditEmp = () => {
             />
           </div>
 
-          {/* Salary */}
           <div>
             <label className="text-sm font-medium text-gray-700">Salary</label>
             <input
@@ -176,7 +175,7 @@ const EditEmp = () => {
             />
           </div>
 
-          {/* Designation */}
+   
           <div>
             <label className="text-sm font-medium text-gray-700">
               Designation
@@ -191,7 +190,7 @@ const EditEmp = () => {
             />
           </div>
 
-          {/* Marital Status */}
+   
           <div>
             <label className="text-sm font-medium text-gray-700">
               Marital Status
@@ -209,7 +208,7 @@ const EditEmp = () => {
             </select>
           </div>
 
-          {/* DOB */}
+        
           <div>
             <label className="text-sm font-medium text-gray-700">
               Date of Birth
@@ -224,7 +223,7 @@ const EditEmp = () => {
             />
           </div>
 
-          {/* Department */}
+       
           <div className="md:col-span-2">
             <label className="text-sm font-medium text-gray-700">
               Department
