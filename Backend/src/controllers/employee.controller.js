@@ -110,32 +110,90 @@ export const getEmployee = async (req, res) => {
   }
 };
 
-
- export const getEmployees = async (req, res) => {
+export const getEmployeeById = async (req, res) => {
   const { id } = req.params;
 
   try {
     const employee = await Employee.findById(id)
-      .populate("userId", "-password")       // exclude password
-      .populate("department");               // include department details
+      .populate("userId", "-password")    // exclude password
+      .populate("department", "dep_name"); // only dep name
 
     if (!employee) {
       return res.status(404).json({
         success: false,
-        error: "Employee not found",
+        message: "Employee not found",
       });
     }
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       employee,
     });
 
   } catch (error) {
     console.error("Get Employee Error:", error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      error: "Server error",
+      message: error.message || "Server error",
+    });
+  }
+};
+
+
+export const updateEmployeeById = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  try {
+    // Check employee exists
+    const employee = await Employee.findById(id);
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    // Update User details if sent in request
+    if (data.name || data.email) {
+      await User.findByIdAndUpdate(
+        employee.userId,
+        {
+          ...(data.name && { name: data.name }),
+          ...(data.email && { email: data.email }),
+        },
+        { new: true }
+      );
+    }
+
+    // Prepare valid employee fields only
+    const updateEmployeeFields = {
+      ...(data.salary && { salary: data.salary }),
+      ...(data.designation && { designation: data.designation }),
+      ...(data.maritalStatus && { maritalStatus: data.maritalStatus }),
+      ...(data.department && { department: data.department }),
+      ...(data.dob && { dob: data.dob }),
+    };
+
+    // Update employee
+    const updatedEmployee = await Employee.findByIdAndUpdate(
+      id,
+      updateEmployeeFields,
+      { new: true }
+    )
+      .populate("userId", "-password")
+      .populate("department", "dep_name");
+
+    res.status(200).json({
+      success: true,
+      message: "Employee updated successfully",
+      employee: updatedEmployee,
+    });
+  } catch (error) {
+    console.error("Update Employee Error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Server error",
     });
   }
 };

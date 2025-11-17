@@ -10,11 +10,10 @@ const EmployeeList = () => {
   const navigate = useNavigate();
 
   const [employees, setEmployees] = useState([]);
-  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  // ✅ Fetch Employees Function
+  // Fetch Employees
   const fetchEmployee = async () => {
     setLoading(true);
     try {
@@ -22,27 +21,24 @@ const EmployeeList = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
-      console.log("Employee API response:", response.data);
+      const employeesData = response.data.data || [];
 
-      // ✅ Check backend response structure
-      const employeesData = response.data.data || response.data || [];
-
-      // ✅ Format Data for DataTable
       const formattedData = employeesData.map((emp, index) => ({
         _id: emp._id,
         sno: index + 1,
-        dep_name: emp.department.dep_name ,
-        name: emp.userId.name || "N/A",
+        dep_name: emp.department?.dep_name || "N/A",
+        name: emp.userId?.name || "N/A",
         dob: new Date(emp.dob).toLocaleDateString(),
-        ProfileImage: emp.userId.ProfileImage ? (
+
+        ProfileImage: emp.userId?.ProfileImage ? (
           <img
-            src={`http://localhost:5000/${emp.userId.ProfileImage}`}
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
+            src={`http://localhost:5000/uploads/${emp.userId.ProfileImage}`}
+            className="w-12 h-12 rounded-full object-cover border border-gray-200"
           />
         ) : (
-          "No Image"
+          <span className="text-gray-400 text-sm">No Image</span>
         ),
+
         salary: emp.salary || "N/A",
         designation: emp.designation || "N/A",
         role: emp.role || "N/A",
@@ -50,85 +46,74 @@ const EmployeeList = () => {
       }));
 
       setEmployees(formattedData);
-      setFilteredEmployees(formattedData);
-
-      Swal.fire({
-        toast: true,
-        position: "top-end",
-        icon: "success",
-        title: "Employees loaded successfully",
-        showConfirmButton: false,
-        timer: 1200,
-        timerProgressBar: true,
-      });
     } catch (error) {
-      console.error("Fetch error:", error);
       Swal.fire({
         icon: "error",
-        title: "Error!",
-        text:
-          error.response?.data?.error ||
-          "Failed to fetch Employees. Please try again later.",
+        title: "Error",
+        text: "Failed to fetch employees",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Fetch on Mount
   useEffect(() => {
     fetchEmployee();
   }, []);
 
-  // ✅ Search Filter with useMemo for performance optimization
-  const filteredEmployeesMemo = useMemo(() => {
+  const filteredEmployees = useMemo(() => {
     return employees.filter((emp) =>
       emp.name.toLowerCase().includes(search.toLowerCase())
     );
   }, [employees, search]);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Employee Data</h2>
+    <div className="p-8 bg-gray-100 min-h-screen">
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+      {/* Header Section */}
+      <div className="bg-white p-6 rounded-xl shadow mb-6">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+          Employee Management
+        </h2>
+
+        {/* Search + Add Employee */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+
           {/* Search Bar */}
-          <div className="relative w-full sm:w-64">
+          <div className="relative w-full md:w-2/4">
+            <FaSearch className="absolute left-4 top-3.5 text-gray-400" />
             <input
               type="text"
+              placeholder="Search employees by name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search employee..."
-              className="w-full border border-gray-300 rounded-lg py-2 pl-10 pr-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 
+              focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+              shadow-sm text-gray-700"
             />
-            <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
 
-          {/* Add Employee Button */}
+          {/* Add Button */}
           <button
             onClick={() => navigate("/admin-dashboard/add-employee")}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 
+            rounded-lg shadow-md transition transform hover:scale-[1.02]"
           >
-            + Add New Employee
+            + Add Employee
           </button>
         </div>
       </div>
 
-      {/* Data Table */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        {loading && <div>Loading...</div>}
-        {filteredEmployeesMemo.length === 0 && !loading && <div>No employees found.</div>}
-        
+      {/* Table Section */}
+      <div className="bg-white p-6 rounded-xl shadow">
         <DataTable
           columns={columns}
-          data={filteredEmployeesMemo}
+          data={filteredEmployees}
           progressPending={loading}
           pagination
           highlightOnHover
-          pointerOnHover
           striped
+          className="rounded-xl"
         />
       </div>
     </div>

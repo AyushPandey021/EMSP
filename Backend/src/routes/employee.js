@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { addEmployee, getEmployee, getEmployees } from "../controllers/employee.controller.js";
+import { addEmployee, getEmployee, getEmployeeById, updateEmployeeById } from "../controllers/employee.controller.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 import fs from "fs";
 
@@ -45,6 +45,8 @@ router.get("/", authMiddleware, getEmployee);
 
 // POST route to add a new employee with image upload
 router.post("/add", upload.single("image"), addEmployee);
-router.get('/:id', authMiddleware, getEmployee, getEmployees);
+router.get("/:id", getEmployeeById);
+router.put("/:id", updateEmployeeById);
+
 
 export default router;

@@ -18,7 +18,8 @@ connectDB();
 // Middleware setup
 app.use(cors()); // Enable CORS for all domains (can be restricted later)
 app.use(express.json()); // Parse incoming JSON requests
-app.use(express.static('public/uploads')); // Serve static files (images, etc.) from 'public/uploads'
+app.use("/uploads", express.static("public/uploads"));
+
 
 // Routes
 app.use("/api/auth", authRouter);

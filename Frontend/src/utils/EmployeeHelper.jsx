@@ -64,7 +64,7 @@ export const columns = [
     cell: (row) =>
       row.ProfileImage ? (
         <img
-          src={`http://localhost:5000/${row.ProfileImage}`}
+          src={`http://localhost:5000/uploads/${row.ProfileImage}`}
           alt={row.name}
           className="w-12 h-12 rounded-xl shadow object-cover border border-gray-200"
         />
@@ -75,7 +75,7 @@ export const columns = [
 
   {
     name: "Employee ID",
-    selector: (row) => row.employeeId?.emp?._id || "N/A",
+    selector: (row) => row._id || "N/A",
   },
 
   {

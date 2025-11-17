@@ -8,9 +8,9 @@ const EditEmp = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [employee, setEmployee] = useState(null);
-  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [employee, setEmployee] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,12 +22,14 @@ const EditEmp = () => {
     dob: "",
   });
 
+  // ------------------------------
   // Fetch Employee + Departments
+  // ------------------------------
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/employees/${id}`,
+          `http://localhost:5000/api/employee/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -38,7 +40,6 @@ const EditEmp = () => {
         const emp = res.data.employee;
         setEmployee(emp);
 
-        // Pre-fill form
         setFormData({
           name: emp.userId?.name || "",
           email: emp.userId?.email || "",
@@ -48,26 +49,27 @@ const EditEmp = () => {
           department: emp.department?._id || "",
           dob: emp.dob ? emp.dob.substring(0, 10) : "",
         });
-      } catch (error) {
+      } catch (err) {
         Swal.fire({
           icon: "error",
-          title: "Employee Not Found!",
-          text: "Unable to fetch employee details.",
+          title: "Error Fetching Employee!",
+          text: "Employee not found.",
         });
       }
     };
 
-    // Load departments
-    const loadDeps = async () => {
+    const loadDepartments = async () => {
       const deps = await fetchDepartments();
       setDepartments(deps || []);
     };
 
     fetchEmployee();
-    loadDeps();
+    loadDepartments();
   }, [id]);
 
-  // Handle change
+  // ------------------------------
+  // Handle Form Change
+  // ------------------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -77,16 +79,17 @@ const EditEmp = () => {
     }));
   };
 
+  // ------------------------------
   // Submit Updated Employee
+  // ------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/employees/${id}`,
-        formData,
+      await axios.put(
+        `http://localhost:5000/api/employee/${id}`,
+        formData, // <-- correct body
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -102,15 +105,15 @@ const EditEmp = () => {
         showConfirmButton: false,
       });
 
-      navigate("/admin-dashboard/employee");
-    } catch (error) {
+      navigate("/admin-dashboard/employees");
+    } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "Update Failed!",
         text:
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Something went wrong!",
+          err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Something went wrong.",
       });
     } finally {
       setLoading(false);
@@ -119,27 +122,30 @@ const EditEmp = () => {
 
   if (!employee) {
     return (
-      <div className="flex justify-center items-center h-[80vh] text-xl text-gray-600">
-        Loading...
+      <div className="flex justify-center items-center h-[80vh] text-xl text-gray-500">
+        Loading employee details...
       </div>
     );
   }
 
   return (
-    
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center p-6">
-      <div className="w-full max-w-3xl bg-white shadow-md rounded-xl p-8">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Edit Employee
+    <div className="min-h-screen bg-gray-100 flex justify-center items-center px-4 py-6">
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-xl p-8">
+        <h2 className="text-3xl font-semibold text-center text-blue-700 mb-6">
+          Edit Employee Details
         </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
-          
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {/* PERSONAL INFO */}
+          <div className="md:col-span-2">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
+              👤 Personal Information
+            </h3>
+          </div>
+
           <div>
-            <label className="text-sm font-medium text-gray-700">Full Name</label>
+            <label className="text-sm font-semibold text-gray-700">Full Name</label>
             <input
               type="text"
               name="name"
@@ -150,69 +156,34 @@ const EditEmp = () => {
             />
           </div>
 
-
           <div>
-            <label className="text-sm font-medium text-gray-700">Email</label>
+            <label className="text-sm font-semibold text-gray-700">Email Address</label>
             <input
               type="email"
               name="email"
+              disabled
               value={formData.email}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full border rounded-lg p-2"
+              className="mt-1 w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Salary</label>
-            <input
-              type="number"
-              name="salary"
-              value={formData.salary}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full border rounded-lg p-2"
-            />
-          </div>
-
-   
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Designation
-            </label>
-            <input
-              type="text"
-              name="designation"
-              value={formData.designation}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full border rounded-lg p-2"
-            />
-          </div>
-
-   
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Marital Status
-            </label>
+            <label className="text-sm font-semibold text-gray-700">Marital Status</label>
             <select
               name="maritalStatus"
               value={formData.maritalStatus}
               onChange={handleChange}
-              className="mt-1 w-full border rounded-lg p-2"
               required
+              className="mt-1 w-full border rounded-lg p-2"
             >
-              <option value="">Select status</option>
+              <option value="">Select...</option>
               <option value="single">Single</option>
               <option value="married">Married</option>
             </select>
           </div>
 
-        
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Date of Birth
-            </label>
+            <label className="text-sm font-semibold text-gray-700">Date of Birth</label>
             <input
               type="date"
               name="dob"
@@ -223,11 +194,39 @@ const EditEmp = () => {
             />
           </div>
 
-       
+          {/* JOB INFO */}
           <div className="md:col-span-2">
-            <label className="text-sm font-medium text-gray-700">
-              Department
-            </label>
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 mt-4">
+              💼 Job Information
+            </h3>
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-gray-700">Salary</label>
+            <input
+              type="number"
+              name="salary"
+              value={formData.salary}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-lg p-2"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-gray-700">Designation</label>
+            <input
+              type="text"
+              name="designation"
+              value={formData.designation}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-lg p-2"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="text-sm font-semibold text-gray-700">Department</label>
             <select
               name="department"
               value={formData.department}
@@ -244,12 +243,11 @@ const EditEmp = () => {
             </select>
           </div>
 
-          {/* Submit */}
           <div className="md:col-span-2 flex justify-center mt-6">
             <button
               type="submit"
               disabled={loading}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               {loading ? "Updating..." : "Update Employee"}
             </button>
