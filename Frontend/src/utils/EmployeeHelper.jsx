@@ -29,7 +29,7 @@ export const EmployeeButtons = ({ id }) => {
 
       <button
         className={`${btn} bg-amber-50 text-amber-600 hover:bg-amber-100 hover:shadow`}
-        onClick={() => navigate(`/admin/employees/salary/${id}`)}
+        onClick={() => navigate(`/admin-dashboard/employees/salary/${id}`)}
       >
         Salary
       </button>

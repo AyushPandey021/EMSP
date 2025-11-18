@@ -6,6 +6,8 @@ import connectDB from './src/Db.js';
 import authRouter from "./src/routes/auth.rout.js";
 import departmentRouter from "./src/routes/department.js";
 import employee from "./src/routes/employee.js";
+import Salary from "./src/routes/salary.js";
+
 
 const app = express();
 
@@ -25,6 +27,7 @@ app.use("/uploads", express.static("public/uploads"));
 app.use("/api/auth", authRouter);
 app.use("/api/departments", departmentRouter);
 app.use("/api/employee", employee);
+app.use("/api/salary", Salary);
 
 // Root route for server health check
 app.get("/", (req, res) => {

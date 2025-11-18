@@ -12,21 +12,23 @@ const AddSalary = () => {
 
   const [formData, setFormData] = useState({
     department: "",
-    employee: "",
-    basicSalary: 0,
-    allowance: 0,
-    deduction: 0,
-    payDate: null,
+    employeeId: "",   // FIXED
+    basicSalary: "",
+    allowance: "",
+    deduction: "",
+    payDate: "",
   });
 
   // -----------------------------------------
-  // FETCH DEPARTMENTS & FETCH ALL EMPLOYEES
+  // Fetch Departments & Employees
   // -----------------------------------------
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     const fetchDepartments = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/departments", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         setDepartments(res.data.departments || []);
@@ -38,17 +40,14 @@ const AddSalary = () => {
     const fetchEmployees = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/employee", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("EMP RESPONSE:", res.data); // debug
-
-        // Handle API variations safely
         const employeeList =
           res.data.employees ||
           res.data.employee ||
           res.data.allEmployees ||
-          res.data.data || // sometimes returned
+          res.data.data ||
           [];
 
         setEmployees(employeeList);
@@ -82,8 +81,14 @@ const AddSalary = () => {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/salary/add`,
-        formData,
+        "http://localhost:5000/api/salary/add",
+        {
+          employeeId: formData.employeeId,
+          basicSalary: Number(formData.basicSalary),
+          allowance: Number(formData.allowance || 0),
+          deduction: Number(formData.deduction || 0),
+          payDate: formData.payDate,
+        },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -101,9 +106,9 @@ const AddSalary = () => {
       Swal.fire(
         "Failed",
         err.response?.data?.message || "Error adding salary",
-        "error",
-         console.log("SALARY ERROR:", err.response?.data)
+        "error"
       );
+      console.log("SALARY ERROR:", err.response?.data);
     } finally {
       setLoading(false);
     }
@@ -150,8 +155,8 @@ const AddSalary = () => {
               Employee
             </label>
             <select
-              name="employee"
-              value={formData.employee}
+              name="employeeId"      // FIXED
+              value={formData.employeeId}
               onChange={handleChange}
               required
               className="mt-1 w-full border rounded-lg p-2"
@@ -228,7 +233,7 @@ const AddSalary = () => {
             />
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <div className="md:col-span-2 flex justify-center mt-6">
             <button
               type="submit"

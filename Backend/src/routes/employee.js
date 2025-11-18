@@ -46,7 +46,7 @@ router.get("/", authMiddleware, getEmployee);
 router.post("/add", upload.single("image"), addEmployee);
 router.get("/:id", getEmployeeById);
 router.put("/:id", updateEmployeeById);
-router.delete("/:id",fetchemloyeebydepid);
+router.get("/department/:id",fetchemloyeebydepid);
 
 
 export default router;

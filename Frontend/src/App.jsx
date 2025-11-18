@@ -68,6 +68,8 @@ const App = () => {
         <Route path="leaves" element={<LeaveList />} />
         <Route path="tasks" element={<TaskList />} />
         <Route path="salary/add" element={<AddSalary />} />
+       <Route path="/admin-dashboard/employees/salary/:id" element={<SalaryList />} />
+
       </Route>
 
       {/* ------------------ EMPLOYEE ROUTES ------------------ */}
