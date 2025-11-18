@@ -14,30 +14,33 @@ const AdminSummery = () => {
       description: "Track and assign employee tasks efficiently.",
       icon: <ClipboardCheck size={40} />,
       color: "from-yellow-400 to-orange-500",
+      route: "/admin-dashboard/tasks",
     },
     {
       title: "Leave Management",
-      description: "Monitor employee leaves and approvals.",
+      description: "Monitor employee leaves and approvals.ayush pandey",
       icon: <CalendarDays size={40} />,
       color: "from-blue-400 to-cyan-500",
+      route: "/admin-dashboard/leaves",
     },
     {
       title: "Salary Management",
       description: "Manage payroll, bonuses, and payments easily.",
       icon: <Wallet size={40} />,
       color: "from-pink-500 to-purple-500",
+      route: "/admin-dashboard/salary",
     },
   ];
 
   return (
-    <div className="h-screen w-full bg-gray-100 flex flex-col items-center justify-center overflow-hidden">
-      {/* 🌦️ Weather Header */}
-      <div className="w-full max-w-6xl mb-8">
+    <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center py-15">
+      {/* Weather Header */}
+      <div className="w-full max-w-6xl">
         <WeatherHeader />
       </div>
 
-      {/* 📊 Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mb-10">
+      {/* Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-3">
         <SummeryCard
           icon={<FaUsers />}
           text="Total Employees"
@@ -58,37 +61,49 @@ const AdminSummery = () => {
         />
       </div>
 
-      {/* 🧩 Task / Leave / Salary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-5xl">
+      {/* Functional Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-5xl mt-5">
         {cards.map((card, index) => (
           <div
             key={index}
-            className="relative bg-gray-900 rounded-3xl p-6 flex flex-col justify-between items-center h-64 
-                       shadow-lg hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] transition-all duration-300 
-                       border border-gray-700 text-center"
+            onClick={() => navigate(card.route)}
+            className="group cursor-pointer w-[22vw] bg-white rounded-3xl p-6 shadow-md border border-gray-200 
+                       hover:shadow-xl hover:scale-[1.02] transition-all duration-300 relative"
           >
-            <div>
+            <div className="flex flex-col items-center text-center">
+
+              {/* Icon */}
               <div
-                className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-r ${card.color} text-white`}
+                className={`w-20 h-20 mb-2 rounded-full flex items-center justify-center 
+                            bg-gradient-to-r ${card.color} text-white shadow-md`}
               >
                 {card.icon}
               </div>
-              <h2 className="text-2xl font-semibold text-white mb-2">
+
+              {/* Title */}
+              <h2 className="text-xl font-bold text-gray-800">
                 {card.title}
               </h2>
-              <p className="text-gray-400 text-sm mb-6 px-2">{card.description}</p>
-            </div>
 
-            <button
-              onClick={() => navigate("/management")}
-              className="px-6 py-2 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-500 hover:to-gray-400 
-                         rounded-full text-white font-medium transition-all duration-300"
-            >
-              Detailed
-            </button>
+              {/* Description */}
+              <p className="text-gray-600 text-sm mt-2 px-3">
+                {card.description}
+              </p>
 
-            <div className="absolute bottom-4 right-4 text-gray-500 text-sm opacity-50">
-              {index + 1}/3
+              {/* Button */}
+              <button
+                className="mt-3 px-6 py-2 bg-gradient-to-r from-gray-700 to-gray-900 
+                           text-white rounded-full shadow-md group-hover:shadow-lg 
+                           transition-all duration-300"
+              >
+                View Details
+              </button>
+
+              {/* Index Number */}
+              <div className="absolute bottom-3 right-4 text-gray-400 text-xs opacity-60">
+                {index + 1}/3
+              </div>
+
             </div>
           </div>
         ))}

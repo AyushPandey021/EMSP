@@ -45,7 +45,7 @@ export const EmployeeButtons = ({ id }) => {
 };
 
 
-/* ---------------- EMPLOYEE COLUMNS ---------------- */
+
 export const columns = [
   {
     name: "S No.",
@@ -54,11 +54,17 @@ export const columns = [
     width: "80px",
   },
   {
-    name: "Name",
-    selector: (row) => row.name || "N/A",
-    sortable: true,
-  },
+  name: "Name",
+  span: 2,
+  sortable: true,
 
+  cell: (row) => (
+    <span className="text-gray-900 font-semibold first-letter:capitalize text-sm">
+      {row.name || "N/A"}
+    </span>
+  ),
+}
+  ,
   {
     name: "Image",
     cell: (row) =>
@@ -125,6 +131,58 @@ export const fetchDepartments = async () => {
         error.response?.data?.error ||
         "Failed to fetch departments. Please try again later.",
     });
+    return [];
+  }
+};
+
+
+export const fetchEmployeesSalary = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.data.success) {
+      return response.data.employees; // return employee list
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: response.data.message || "Unable to fetch employees.",
+      });
+      return [];
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error!",
+      text:
+        error.response?.data?.message ||
+        "Failed to fetch employees list. Please try again later.",
+    });
+
+    return [];
+  }
+};
+
+export const fetchAllEmployees = async () => {
+  try {
+    const res = await axios.get("http://localhost:5000/api/employee", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+
+    return (
+      res.data.employees ||
+      res.data.employee ||
+      res.data.allEmployees ||
+      []
+    );
+  } catch (err) {
+    Swal.fire("Error", "Unable to load employees", "error");
     return [];
   }
 };

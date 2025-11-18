@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Pencil, Trash2 } from "lucide-react";
 
 // 🎨 Beautiful and responsive action buttons
 export const DepartmentButtons = ({ _id, onDepartmentDelete }) => {
@@ -58,20 +59,54 @@ const handleDelete = async () => {
 
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={handleEdit}
-        className="px-3 py-1 text-sm bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-all duration-200"
-      >
-        Edit
-      </button>
-      <button
-        onClick={handleDelete}
-        className="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200"
-      >
-        Delete
-      </button>
-    </div>
+
+<div className="flex items-center gap-2 justify-center">
+  {/* Edit Button */}
+  <button
+    onClick={handleEdit}
+    className="
+      flex items-center gap-1
+      px-2.5 py-1.5
+      text-xs font-medium
+      rounded-lg
+      bg-yellow-400/90 
+      text-gray-900 
+      shadow-sm
+      transition-all 
+      duration-200
+      hover:bg-yellow-500 hover:shadow-md hover:-translate-y-[1px]
+      active:scale-95
+      whitespace-nowrap
+    "
+  >
+    <Pencil size={14} />
+    Edit
+  </button>
+
+  {/* Delete Button */}
+  <button
+    onClick={handleDelete}
+    className="
+      flex items-center gap-1
+      px-2.5 py-1.5
+      text-xs font-medium
+      rounded-lg
+      bg-red-500/90 
+      text-white 
+      shadow-sm
+      transition-all 
+      duration-200
+      hover:bg-red-600 hover:shadow-md hover:-translate-y-[1px]
+      active:scale-95
+      whitespace-nowrap
+    "
+  >
+    <Trash2 size={14} />
+    Delete
+  </button>
+</div>
+
+
   );
 };
 

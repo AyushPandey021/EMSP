@@ -83,7 +83,7 @@ const WeatherHeader = () => {
   }, []);
 
   return (
-    <header className="relative w-full h-[200px] p-6 rounded-2xl overflow-hidden text-white font-poppins mb-10 shadow-lg">
+    <header className="relative w-full h-[200px] p-6 rounded-2xl overflow-hidden text-white font-poppins mt-[-6%] shadow-lg">
       {/* Background Image */}
       <img
         src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop"
@@ -95,9 +95,10 @@ const WeatherHeader = () => {
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-center h-full px-10 py-8">
         {/* Left Section - Date & Time */}
         <div>
-          <h2 className="text-lg md:text-xl font-light">{date}</h2>
-          <h1 className="text-4xl md:text-6xl font-bold mt-2">{time}</h1>
-          <h4 className="text-lg font-light mt-2">{location}</h4>
+          <h2 className="text-lg md:text-2xl font-semibold text-gray-100">{date}</h2>
+          <h1 className="text-4xl md:text-6xl font-semibold mt-1">{time}</h1>
+          <h4 className="text-2xl font-mono mt-3
+           px-1">📍{location}</h4>
         </div>
 
         {/* Right Section - Weather Info */}

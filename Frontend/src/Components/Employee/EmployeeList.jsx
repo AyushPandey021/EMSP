@@ -68,11 +68,11 @@ const EmployeeList = () => {
   }, [employees, search]);
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="p- bg-gray-100 min-h-screen">
 
       {/* Header Section */}
       <div className="bg-white p-6 rounded-xl shadow mb-6">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+        <h2 className="text-3xl font-bold tracking-wide drop-shadow-lg mb-5">
           Employee Management
         </h2>
 

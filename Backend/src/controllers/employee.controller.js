@@ -197,3 +197,22 @@ export const updateEmployeeById = async (req, res) => {
     });
   }
 };
+
+
+export const fetchemloyeebydepid=async(req,res)=>{
+  const { id } = req.params;
+  try { 
+    const employees = await Employee.find({ department: id })
+      .populate("userId", "name email profileImage")
+      .populate("department", "dep_name");    
+    res.status(200).json({
+      success: true,
+      employees,
+    });
+  } catch (error) {
+    console.error("Fetch Employees by Department Error:", error);
+    res.status(500).json({  
+      success: false,
+      message: error.message || "Server error",
+    });
+  } }

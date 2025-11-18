@@ -12,7 +12,7 @@ const RoleBasedRoute = ({ children, requiredRole }) => {
   if (!user) return <Navigate to="/login" />;
 
   // 🔹 If user role does not match
-  if (user.role !== requiredRole) return <Navigate to="/unauthorized" />;
+  if (user.role !== requiredRole) return <Navigate to="/admin-dashboard" />;
 
   // ✅ Otherwise, render the child component
   return children;

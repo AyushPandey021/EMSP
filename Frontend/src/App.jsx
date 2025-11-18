@@ -21,6 +21,8 @@ import EmployeeList from "./Components/Employee/EmployeeList";
 import AddEmp from "./Components/Employee/AddEmp";
 import { ViewEmp } from "./Components/Employee/View/ViewEmp";
 import EditEmp from "./Components/Employee/Edit/EditEmp";
+import SalaryList from "./Components/Salary/SalaryList";
+import AddSalary from "./Components/Salary/AddSalary";
 
 const App = () => {
   return (
@@ -65,6 +67,7 @@ const App = () => {
         {/* Leaves and Tasks */}
         <Route path="leaves" element={<LeaveList />} />
         <Route path="tasks" element={<TaskList />} />
+        <Route path="salary/add" element={<AddSalary />} />
       </Route>
 
       {/* ------------------ EMPLOYEE ROUTES ------------------ */}
